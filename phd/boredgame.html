@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <pre>
+    <p>Math.div = document.createElement('div'); Math.div.id = 'main'; Math.div.innerHTML = `&lt;div id="mainheader"&gt;
+        &lt;img src="/pages/image.jpg" alt="logo"&gt;
+        &lt;b&gt;Cipher Syndicate&lt;/b&gt;&lt;p&gt;ctrl + e to hide&lt;/p&gt;&lt;p&gt;Drag here&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div id="content"&gt;
+        &lt;button id="plus"&gt;+&lt;/button&gt;
+        &lt;select name="sel" id="sel"&gt;
+            &lt;option value="105500895"&gt;Geometry Dash&lt;/option&gt;
+            &lt;option value="10128407"&gt;Paper Minecraft&lt;/option&gt;
+            &lt;option value="612229554"&gt;Platformer&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;iframe src="https://scratch.mit.edu/projects/105500895/embed" allowtransparency="true" width="485"
+            height="402" frameborder="0" scrolling="no" id="i" allowfullscreen&gt;&lt;/iframe&gt;
+    &lt;/div&gt;`; Math.style = document.createElement('style'); Math.style.innerHTML = `#main {
+                text-align: left;
+                color: rgba(8, 200, 27, 0.978);
+                width: 80%;
+                background: #333;
+                padding: 20px;
+                border-radius: 10px;
+                position: absolute;
+                border-radius: 20px;
+                border: 5px solid black;
+                text-align: center;
+                font-family: Consolas, monaco, monospace;
+                left: 10%;
+            }
+    
+            body {
+                font-family: Arial, sans-serif;
+                background: #222;
+                color: #fff;
+                text-align: center;
+                margin: 0;
+                padding: 20px;
+            }
+    
+            a {
+                color: rgb(2, 146, 16);
+            }
+    
+            img {
+                height: 50px;
+            }
+    
+            #mainheader {
+                text-align: left;
+                padding: 20px;
+                margin: 20px;
+                border: 5px solid;
+                border-radius: 10px;
+                background-color: black;
+            }
+    
+            .hide {
+                display: none;
+            }`; document.body.appendChild(Math.div); document.head.appendChild(Math.style);
+    dragElement(document.getElementById("main"));
+    
+    document.addEventListener('keydown', hide)
+    
+    function dragElement(elmnt) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        } else {
+            elmnt.onmousedown = dragMouseDown;
+        }
+    
+        function dragMouseDown(e) {
+    
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+    
+        function elementDrag(e) {
+    
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+    
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+    function hide(event) {
+        if (event.key == 'e' &amp;&amp; event.ctrlKey &amp;&amp; document.getElementById('main').className != 'hide') {
+            document.getElementById('main').className = 'hide'
+        } else if (event.key == 'e' &amp;&amp; event.ctrlKey) {
+            document.getElementById('main').className = ''
+        }
+    }
+    function char() {
+        const sel = document.getElementById('sel');
+        const i = document.getElementById('i');
+        i.src = `https://scratch.mit.edu/projects/${sel.value}/embed`
+    }
+    document.getElementById('sel').addEventListener('change', char)
+    document.getElementById('plus').addEventListener('click', () =&gt; {
+        const sel = document.getElementById('sel');
+        const i = document.getElementById('i');
+        sel.innerHTML += `&lt;option value="${prompt('Enter the project id')}"&gt;${prompt('Enter the label for the project')}&lt;/option&gt;`
+        char();
+    });</p>
+</pre>
+</body>
+</html>
