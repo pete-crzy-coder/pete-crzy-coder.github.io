@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sozzy</title>
+    <style>
+        .but {
+            background-image: linear-gradient(blue, rgb(2, 2, 152));
+            color: white;
+            border-radius: 20px;
+            height: 40px;
+            width: 200px;
+        }
+
+        .but:hover {
+            background-image: linear-gradient(rgb(2, 2, 152), blue);
+            color: white;
+            border-radius: 20px;
+            height: 40px;
+            width: 200px;
+        }
+    </style>
 </head>
-<body>
-    Sorry, the page ru ar looking for cant be found. this website is also practically useless, so theres no link to home page (JK! <a href="/">Home</a>)
+
+<body style="text-align: center;">
+    <h1>404</h1>
+    Sozzy, the page ru ar looking for cant be found. This website is also practically useless, so theres no link to home
+    page! (JK! <a href="/">Home</a>)<br>
+    <button onclick="uoof()" class="but">Don't Click Me!!!</button><br>
+    <div id="hide" style="display: none;">
+        DUN DUN DUUUUNN!!!!!<br>
+        <img src="giphy.gif" alt="">
+    </div>
+    <script>
+        function uoof() {
+            document.getElementById("hide").style.display = "block";
+            setTimeout(unuoof, 3000);
+        }
+
+        function unuoof() {
+            document.getElementById("hide").style.display = "none";
+        }
+    </script>
 </body>
+
 </html>
