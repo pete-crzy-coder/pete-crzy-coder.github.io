@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <pre>
+        !function(){let t=window.XMLHttpRequest;window.XMLHttpRequest=function(){let e=new t,s=e.open,n=e.send;return
+        e.open=function(t,e,...n){return this._method=t,this._url=e,s.call(this,t,e,...n)},e.send=function(...t){return
+        console.log(`[Global XHR] ${this._method} ${this._url}`,t),this.addEventListener("load",function(){if(console.log(`[XHR
+        Response]
+        ${this._url}`,this.responseText),this._url.startsWith("/ajax/svg_interactives/startQuestionSet")||this._url.startsWith("/ajax/svg_interactives/getNextSvgInteractive"))try{let
+        t=JSON.parse(this.responseText);console.log("[Parsed JSON]",t);let e=t.components,s=e.length>2?2:1;console.log(s);let
+        n;n="1"==s?JSON.parse(e[1].Data).Answers:"Question type currently under development.";let
+        r=document.querySelector('a[href="tel:1300882045"]');r.innerText=` ${n}`}catch(o){console.warn("Failed to parse response
+        as JSON",o)}}),n.apply(this,t)},e},window.XMLHttpRequest.prototype=t.prototype,console.log("[Hooked]
+        window.XMLHttpRequest")}();
+    </pre>
+</body>
+
+</html>
