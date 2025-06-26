@@ -7,5 +7,4 @@ It contains hacks for Mathsonline (The first EVER[^1]! by me!), Blooket (Credits
 I’m a freelance hacker who hacks school websites(for now!).\
 \
 \
-\
 [^1]: I've combed the entire Internet for one, so tell me if I'm wrong (2025)
