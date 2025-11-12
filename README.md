@@ -1,5 +1,5 @@
 # The Beggining
-***This is the first fully free, non-ad-ed platform for hacks and soon, sharing hacks.***  
+***This is (probably) the first fully free, non-ad-ed platform for hacks and soon, sharing hacks.***  
 
 This was made by a hacker, me/CrazyComputer.  
 
