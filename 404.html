@@ -21,17 +21,34 @@
             height: 40px;
             width: 200px;
         }
+
+        #runaway {
+            position: relative;
+            margin-top: 16px;
+
+            background: transparent;
+            color: #6c8cff;
+
+            border: 1px solid #6c8cff;
+            border-radius: 14px;
+
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+
+            transition: transform 0.15s ease;
+        }
     </style>
 </head>
 
 <body style="text-align: center;">
     <h1>404</h1>
     Sozzy, the page ru ar looking for cant be found. This website is also practically useless, so theres no link to home
-    page! (JK! <a href="/">Home</a>)<br>
+    page! (JK! <a href="/" id="runaway">Home</a>)<br>
     <button onclick="uoof()" class="but">Don't Click Me!!!</button><br>
     <div id="hide" style="display: none;">
         DUN DUN DUUUUNN!!!!!<br>
-        <img src="giphy.gif" alt="">
+        <img src="/giphy.gif" alt="">
     </div>
     <script>
         function uoof() {
@@ -42,7 +59,24 @@
         function unuoof() {
             document.getElementById("hide").style.display = "none";
         }
+
+        const btn = document.getElementById("runaway");
+
+        btn.addEventListener("mouseenter", () => {
+            const maxX = 120;
+            const maxY = 80;
+
+            const x = Math.random() * maxX * (Math.random() > 0.5 ? 1 : -1);
+            const y = Math.random() * maxY * (Math.random() > 0.5 ? 1 : -1);
+
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        btn.addEventListener("click", () => {
+            window.location.href = "/";
+        });
     </script>
+
 </body>
 
 </html>
