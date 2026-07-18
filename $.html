@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manga Viewer</title>
+
+<style>
+body {
+    margin: 0;
+    background: #222;
+    color: white;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.nav.bottom {
+    position: static;
+    margin: 20px 0;
+}
+
+button {
+    font-size: 16px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.chapter-wrapper {
+    position: relative;
+}
+
+.chapter-button {
+    min-width: 110px;
+    text-align: center;
+}
+
+.chapter-menu {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2b2b2b;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    max-height: 60vh;
+    overflow-y: auto;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+
+.chapter-menu.open {
+    display: flex;
+}
+
+.chapter-item {
+    background: transparent;
+    color: white;
+    border: none;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 6px;
+    min-width: 140px;
+}
+
+.chapter-item:hover {
+    background: #444;
+}
+
+.chapter-item.current {
+    background: #555;
+    font-weight: bold;
+}
+
+img {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    margin: 5px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+    <button onclick="changeChapter(-1)">⬅ Prev</button>
+
+    <div class="chapter-wrapper">
+        <button id="chapterButton" class="chapter-button" type="button">0001 ▼</button>
+        <div id="chapterMenu" class="chapter-menu"></div>
+    </div>
+
+    <button onclick="changeChapter(1)">Next ➡</button>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const resumed = !params.has("chapter");
+
+let chapter =
+    params.get("chapter") ||
+    localStorage.getItem("lastChapter") ||
+    "0001";
+
+chapter = String(parseInt(chapter, 10)).padStart(4, "0");
+
+localStorage.setItem("lastChapter", chapter);
+
+if (resumed && localStorage.getItem("lastChapter")) {
+    document.querySelector(".nav").insertAdjacentHTML(
+        "beforeend",
+        "<span style='opacity:.7'>&nbsp;(Resumed)</span>"
+    );
+}
+
+const chapterNum = parseInt(chapter, 10);
+const chapterButton = document.getElementById("chapterButton");
+const chapterMenu = document.getElementById("chapterMenu");
+
+document.title = `Detective Conan - Chapter ${chapterNum}`;
+
+chapterButton.textContent = `${chapterNum} ▼`;
+
+function buildChapterMenu() {
+    chapterMenu.innerHTML = "";
+
+    const start = Math.max(1, chapterNum - 10);
+    const end = chapterNum + 10;
+
+    for (let i = start; i <= end; i++) {
+        const btn = document.createElement("button");
+
+        btn.className =
+            "chapter-item" +
+            (i === chapterNum ? " current" : "");
+
+        btn.textContent =
+            i === chapterNum
+                ? `Chapter ${i} ✓`
+                : `Chapter ${i}`;
+
+        btn.onclick = () => goToChapter(i);
+
+        chapterMenu.appendChild(btn);
+    }
+}
+
+buildChapterMenu();
+
+chapterButton.onclick = e => {
+    e.stopPropagation();
+    chapterMenu.classList.toggle("open");
+};
+
+document.addEventListener("click", e => {
+    if (!chapterMenu.contains(e.target) && e.target !== chapterButton) {
+        chapterMenu.classList.remove("open");
+    }
+});
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        chapterMenu.classList.remove("open");
+    }
+});
+
+let page = 1;
+
+function imageUrl(pageNo) {
+    return `https://official.lowee.us/manga/Detective-Conan/${chapter}-${String(pageNo).padStart(3, "0")}.png`;
+}
+
+function loadNext() {
+    const img = document.createElement("img");
+
+    img.loading = "lazy";
+    img.decoding = "async";
+
+    img.onload = () => {
+        page++;
+        loadNext();
+    };
+
+    img.onerror = () => {
+        img.remove();
+        document.body.appendChild(bottomNav);
+    };
+
+    img.src = imageUrl(page);
+
+    document.body.appendChild(img);
+}
+
+function goToChapter(num) {
+    num = Math.max(1, Number(num) || 1);
+    location.search = "?chapter=" + String(num).padStart(4, "0");
+}
+
+function changeChapter(offset) {
+    goToChapter(chapterNum + offset);
+}
+
+const bottomNav = document.createElement("div");
+bottomNav.className = "nav bottom";
+bottomNav.innerHTML = `
+<button onclick="changeChapter(-1)">⬅ Prev</button>
+<strong>End of Chapter</strong>
+<button onclick="changeChapter(1)">Next ➡</button>
+`;
+
+loadNext();
+</script>
+
+</body>
+</html>
