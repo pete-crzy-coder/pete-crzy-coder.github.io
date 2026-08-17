@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Not Found</title>
+<style>
+  body {
+    background: #0b0c10;
+    color: #e6e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: sans-serif;
+  }
+
+.card {
+  position: relative;
+  width: 400px;
+  height: 300px;
+  background: #151821;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+#runaway {
+  position: fixed;
+
+  padding: 12px 20px;
+  border-radius: 14px;
+
+  background: transparent;
+  color: #6c8cff;
+  border: 1px solid #6c8cff;
+
+  cursor: pointer;
+
+  transition:
+    left 0.12s ease-out,
+    top 0.12s ease-out;
+
+  z-index: 9999;
+}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>404 – Page Not Found</h2>
+    <button id="runaway">Return Home</button>
+  </div>
+
+  <script>
+const btn = document.getElementById("runaway");
+
+let dodging = false;
+
+document.addEventListener("mousemove", (e) => {
+    if (dodging) return;
+
+    const rect = btn.getBoundingClientRect();
+
+    const buttonX = rect.left + rect.width / 2;
+    const buttonY = rect.top + rect.height / 2;
+
+    let dx = buttonX - e.clientX;
+    let dy = buttonY - e.clientY;
+
+    const distance = Math.hypot(dx, dy);
+
+    if (distance > 130) return;
+
+    dodging = true;
+
+    // Normalize mouse -> button
+    dx /= distance || 1;
+    dy /= distance || 1;
+
+    /*
+     * 50/50:
+     *
+     * true  = run away from mouse
+     * false = jump over mouse
+     */
+    const runAway = Math.random() < 0.5;
+
+    let directionX;
+    let directionY;
+    let jumpDistance;
+
+    if (runAway) {
+        // 🏃 Run directly away
+        directionX = dx;
+        directionY = dy;
+
+        jumpDistance = 250 + Math.random() * 250;
+
+    } else {
+        // 🫠 Jump TOWARD the mouse,
+        // but go far enough to cross it.
+        directionX = -dx;
+        directionY = -dy;
+
+        jumpDistance = distance + 150 + Math.random() * 250;
+    }
+
+    /*
+     * Add some randomness to the angle.
+     * This prevents perfectly predictable dodges.
+     */
+    const randomAngle =
+        (Math.random() - 0.5) * Math.PI * 0.8;
+
+    const cos = Math.cos(randomAngle);
+    const sin = Math.sin(randomAngle);
+
+    const dodgeX =
+        directionX * cos -
+        directionY * sin;
+
+    const dodgeY =
+        directionX * sin +
+        directionY * cos;
+
+    let newX =
+        buttonX +
+        dodgeX * jumpDistance -
+        rect.width / 2;
+
+    let newY =
+        buttonY +
+        dodgeY * jumpDistance -
+        rect.height / 2;
+
+    // Keep it inside the browser window
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+
+    btn.style.left = `${newX}px`;
+    btn.style.top = `${newY}px`;
+
+    setTimeout(() => {
+        dodging = false;
+    }, 80);
+});
+
+    btn.addEventListener("click", () => {
+      window.location.href = "/";
+    });
+  </script>
+</body>
+</html>
