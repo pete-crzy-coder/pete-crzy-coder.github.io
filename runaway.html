@@ -54,6 +54,21 @@
   <script>
 const btn = document.getElementById("runaway");
 
+
+function randomStart() {
+    const padding = 30;
+
+    const maxX = window.innerWidth - btn.offsetWidth - padding;
+    const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+    const x = padding + Math.random() * (maxX - padding);
+    const y = padding + Math.random() * (maxY - padding);
+
+    btn.style.left = `${x}px`;
+    btn.style.top = `${y}px`;
+}
+
+randomStart()
 let dodging = false;
 
 document.addEventListener("mousemove", (e) => {
