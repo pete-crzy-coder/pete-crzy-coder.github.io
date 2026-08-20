@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch me!</title>
+  <style>
+    body {
+      background: #0b0c10;
+      color: #e6e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+
+    .card {
+      position: relative;
+      width: 400px;
+      height: 300px;
+      background: #151821;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #runaway {
+      position: fixed;
+
+      padding: 12px 20px;
+      border-radius: 14px;
+
+      background: transparent;
+      color: #6c8cff;
+      border: 1px solid #6c8cff;
+
+      cursor: pointer;
+
+      transition:
+        left 0.12s ease-out,
+        top 0.12s ease-out;
+
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Catch da button</h2>
+    <button id="runaway">Catch me!</button>
+  </div>
+
+  <script>
+    const btn = document.getElementById("runaway");
+
+
+    function randomStart() {
+      const padding = 30;
+
+      const maxX = window.innerWidth - btn.offsetWidth - padding;
+      const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+      const x = padding + Math.random() * (maxX - padding);
+      const y = padding + Math.random() * (maxY - padding);
+
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+    }
+
+    randomStart()
+    let dodging = false;
+
+    document.addEventListener("mousemove", (e) => {
+      if (dodging) return;
+
+      const rect = btn.getBoundingClientRect();
+
+      const buttonX = rect.left + rect.width / 2;
+      const buttonY = rect.top + rect.height / 2;
+
+      let dx = buttonX - e.clientX;
+      let dy = buttonY - e.clientY;
+
+      const distance = Math.hypot(dx, dy);
+
+      if (distance > 130) return;
+
+      dodging = true;
+
+      // Normalize mouse -> button
+      dx /= distance || 1;
+      dy /= distance || 1;
+
+      /*
+       * 50/50:
+       *
+       * true  = run away from mouse
+       * false = jump over mouse
+       */
+      const runAway = Math.random() < 0.5;
+
+      let directionX;
+      let directionY;
+      let jumpDistance;
+
+      if (runAway) {
+        // 🏃 Run directly away
+        directionX = dx;
+        directionY = dy;
+
+        jumpDistance = 250 + Math.random() * 250;
+
+      } else {
+        // 🫠 Jump TOWARD the mouse,
+        // but go far enough to cross it.
+        directionX = -dx;
+        directionY = -dy;
+
+        jumpDistance = distance + 130 + Math.random() * 250;
+      }
+
+      /*
+       * Add some randomness to the angle.
+       * This prevents perfectly predictable dodges.
+       */
+      const randomAngle =
+        (Math.random() - 0.5) * Math.PI * 0.8;
+
+      const cos = Math.cos(randomAngle);
+      const sin = Math.sin(randomAngle);
+
+      const dodgeX =
+        directionX * cos -
+        directionY * sin;
+
+      const dodgeY =
+        directionX * sin +
+        directionY * cos;
+
+      let newX =
+        buttonX +
+        dodgeX * jumpDistance -
+        rect.width / 2;
+
+      let newY =
+        buttonY +
+        dodgeY * jumpDistance -
+        rect.height / 2;
+
+      // Keep it inside the browser window
+      const maxX = window.innerWidth - rect.width;
+      const maxY = window.innerHeight - rect.height;
+
+      newX = Math.max(0, Math.min(newX, maxX));
+      newY = Math.max(0, Math.min(newY, maxY));
+
+      btn.style.left = `${newX}px`;
+      btn.style.top = `${newY}px`;
+
+      const taunts = [
+        "Nice try!",
+        "Too slow!",
+        "Missed me!",
+        "Nope!",
+        "Not today!",
+        "Try again!",
+        "So close!",
+        "Almost!",
+        "You thought.",
+        "HAHA!",
+        "HAHAHAHA!",
+        "LOL",
+        "LMAO",
+        "💀",
+        "😭",
+        "Skill issue.",
+        "Massive skill issue.",
+        "Bro missed 😭",
+        "Bro really thought 💀",
+        "You actually thought I'd stay?",
+        "Were you expecting me to sit still?",
+        "Catch me if you can!",
+        "Good luck!",
+        "You'll need it.",
+        "Nice mouse.",
+        "Nice attempt.",
+        "That was embarrassing.",
+        "That was close!",
+        "Do better.",
+        "Try harder.",
+        "Faster!",
+        "Too predictable.",
+        "I saw that coming.",
+        "I knew you were coming.",
+        "I can see you.",
+        "I'M WATCHING YOU.",
+        "👀",
+        "Not even close.",
+        "You call that an attempt?",
+        "Weak.",
+        "Pathetic.",
+        "Amateur.",
+        "Is that all you've got?",
+        "That's your best move?",
+        "You can do better than that.",
+        "Come on!",
+        "Keep trying.",
+        "Keep chasing.",
+        "I'm getting bored.",
+        "This is fun.",
+        "This is hilarious.",
+        "I'm having fun.",
+        "Are you?",
+        "You seem frustrated.",
+        "Getting annoyed yet?",
+        "How's your day going?",
+        "Having trouble?",
+        "Need some help?",
+        "Maybe use a faster mouse.",
+        "Try using both hands.",
+        "Skill issue detected.",
+        "Target lost.",
+        "Target acquired.",
+        "Target escaped.",
+        "Escape successful.",
+        "Evasive maneuver!",
+        "INITIATING ESCAPE.",
+        "RUNNING AWAY!",
+        "TACTICAL RETREAT!",
+        "EVASIVE ACTION!",
+        "NOPE NOPE NOPE",
+        "BYE 👋",
+        "SEE YA!",
+        "GOTTA GO!",
+        "I'M OUTTA HERE!",
+        "🏃💨",
+        "💨💨💨",
+        "ZOOM!",
+        "NYOOOOM!",
+        "YEET!",
+        "YEET!",
+        "YEET!",
+        "Gone.",
+        "And I'm gone.",
+        "Where'd I go?",
+        "You lost me.",
+        "I'm over here!",
+        "Wrong direction!",
+        "Wrong way!",
+        "Nice guess.",
+        "Incorrect.",
+        "Denied.",
+        "Access denied.",
+        "Permission denied.",
+        "403: Button Forbidden",
+        "404: Button Not Found",
+        "Error: Skill Missing",
+        "Error 404: Aim not found",
+        "ERROR: TOO SLOW",
+        "SYSTEM: ESCAPE",
+        "ACCESS DENIED",
+        "REQUEST DENIED",
+        "CLICK REJECTED",
+        "CLICK BLOCKED",
+        "NICE TRY, HUMAN.",
+        "HUMAN DETECTED.",
+        "THREAT DETECTED.",
+        "EVADING HUMAN.",
+        "HUMAN TOO SLOW.",
+        "AUTONOMOUS EVASION ENABLED.",
+        "YOU CANNOT CATCH ME.",
+        "YOU WILL NOT CATCH ME.",
+        "I REFUSE.",
+        "NO.",
+        "NOPE.",
+        "ABSOLUTELY NOT.",
+        "DEFINITELY NOT.",
+        "NOT A CHANCE.",
+        "NEGATIVE.",
+        "DENIED.",
+        "DECLINED.",
+        "REJECTED.",
+        "HAHA, NO.",
+        "Nice fingers.",
+        "Nice clicking.",
+        "Nice aim.",
+        "Your aim is questionable.",
+        "Have you tried aiming?",
+        "Maybe click the button?",
+        "Wait... you can't.",
+        "That's unfortunate.",
+        "This button has places to be.",
+        "I'm busy.",
+        "I'm unavailable.",
+        "I'm on break.",
+        "I'm currently avoiding you.",
+        "Please stop chasing me.",
+        "Can you not?",
+        "Stop.",
+        "STOP.",
+        "STOP CHASING ME.",
+        "WHY ARE YOU STILL HERE?",
+        "WHY DO YOU KEEP TRYING?",
+        "GIVE UP.",
+        "JUST GIVE UP.",
+        "THERE IS NO BUTTON.",
+        "THERE NEVER WAS A BUTTON.",
+        "THE BUTTON WAS A LIE.",
+        "YOU HAVE BEEN BAMBOOZLED.",
+        "YOU HAVE BEEN DECEIVED.",
+        "YOU FELL FOR IT.",
+        "THIS IS YOUR LIFE NOW.",
+        "WELCOME TO THE CHASE.",
+        "YOU'RE NOT WINNING THIS.",
+        "I OWN THIS SCREEN.",
+        "THIS IS MY SCREEN NOW.",
+        "I LIVE HERE.",
+        "YOU CANNOT REMOVE ME.",
+        "I AM SPEED.",
+        "I AM INEVITABLE.",
+        "YOU SHALL NOT CLICK.",
+        "THE CLICKING WILL CONTINUE.",
+        "THE BUTTON HAS EVOLVED.",
+        "FINAL BOSS.",
+        "BOSS FIGHT!",
+        "PHASE 2.",
+        "PHASE 3.",
+        "ENRAGED.",
+        "MAXIMUM EVASION.",
+        "ULTRA INSTINCT.",
+        "DODGE!",
+        "PARRY!",
+        "MISS!",
+        "CRITICAL MISS!",
+        "CRITICAL ESCAPE!",
+        "COMBO BREAKER!",
+        "NO HIT!",
+        "PERFECT DODGE!",
+        "💨💨💨💨",
+        "🏃🏃🏃",
+        "🫡",
+        "🗿",
+        "🤨",
+        "💀💀💀",
+        "😭😭😭",
+        "😂",
+        "L",
+        "LMAOOO",
+        "GET OUTPLAYED.",
+        "OUTPLAYED.",
+        "OUTSMARTED.",
+        "OUTRUN.",
+        "DIFF.",
+        "AIM DIFF.",
+        "REACTION DIFF.",
+        "SPEED DIFF.",
+        "BUTTON DIFF.",
+        "MOUSE DIFF.",
+        "HUMAN DIFF."
+      ];
+
+      btn.textContent =
+        taunts[Math.floor(Math.random() * taunts.length)];
+
+      setTimeout(() => {
+        dodging = false;
+      }, 80);
+    });
+
+    btn.addEventListener("click", () => {
+      window.location.href = "/caught.html";
+    });
+  </script>
+</body>
+
+</html>
