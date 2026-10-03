@@ -9,73 +9,43 @@
         body {
             background: #0b0c10;
             color: #e6e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
             font-family: sans-serif;
+        }
+
+        .card {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            background: #151821;
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
-        }
-
-        #hack {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-
-            object-fit: cover;
-            background: black;
-
-            z-index: 999999;
-
-            display: none;
-        }
-
-        #runaway {
-
-            padding: 12px 20px;
-            border-radius: 14px;
-
-            background: transparent;
-            color: #6c8cff;
-            border: 1px solid #6c8cff;
-
-            cursor: pointer;
-
-            transition:
-                left 0.12s ease-out,
-                top 0.12s ease-out;
-
-            z-index: 99;
         }
     </style>
 </head>
 
 <body>
-    <h1>GOOD JOB. U caught it.</h1>
-    <p><h5>but I kno what ACTUALLY happened</h5></p>
-    <br>becuase my servant, 
-    <p><button id="runaway">Da Runaway Button</button></p>
-    <br> told me u were <h3>CHEATING</h3>
-    U will be hacked by craz4c0mput3r
-    (and don't press on da poor abused button)
-    <br><video id="hack" src="/hacker.mp4"></video>
+    <div class="card">
+        <h1>Good job. U caught my sneaky btn.</h1>
+        <p>pls support my minecraft server... join with ip (BE or JE):</p>
+        <button onclick="copyIP()">203.28.238.130</button>
+    </div>
+
     <script>
-        const video = document.getElementById("hack");
-        const button = document.getElementById("runaway");
+        function copyIP() {
+            const serverIP = "203.28.238.130";
 
-        button.addEventListener("click", async () => {
-            video.style.display = "block";
-
-            // Actually make the video fullscreen
-            await video.requestFullscreen();
-
-            video.play();
-        });
-
-        video.addEventListener("fullscreenchange", () => {
-            if (!document.fullscreenElement) {
-                video.style.display = "none";
-                video.pause();
-            }
-        });
+            // Copies the IP to the clipboard
+            navigator.clipboard.writeText(serverIP).then(() => {
+                alert("Server IP copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy: ", err);
+            });
+        }
     </script>
 </body>
 
