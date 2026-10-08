@@ -113,6 +113,13 @@
         <button onclick="changeChapter(1)">Next ➡</button>
     </div>
 
+    <div id="pages"></div>
+
+    <div id="bottom-nav" class="nav bottom">
+        <button onclick="changeChapter(-1)">⬅ Prev</button>
+        <strong>End of Chapter</strong>
+        <button onclick="changeChapter(1)">Next ➡</button>
+    </div>
     <script>
         const params = new URLSearchParams(location.search);
         const resumed = !params.has("chapter");
@@ -207,12 +214,16 @@
 
             img.onerror = () => {
                 img.remove();
-                document.body.appendChild(bottomNav);
+
+                // Try the same page again using the same source
+                setTimeout(() => {
+                    loadNext();
+                }, 500);
             };
 
             img.src = imageUrl(page);
 
-            document.body.appendChild(img);
+            document.getElementById("pages").appendChild(img);
         }
 
         function goToChapter(num) {
@@ -223,14 +234,6 @@
         function changeChapter(offset) {
             goToChapter(chapterNum + offset);
         }
-
-        const bottomNav = document.createElement("div");
-        bottomNav.className = "nav bottom";
-        bottomNav.innerHTML = `
-<button onclick="changeChapter(-1)">⬅ Prev</button>
-<strong>End of Chapter</strong>
-<button onclick="changeChapter(1)">Next ➡</button>
-`;
 
         loadNext();
     </script>
