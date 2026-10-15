@@ -151,8 +151,8 @@
         function buildChapterMenu() {
             chapterMenu.innerHTML = "";
 
-            const start = Math.max(1, chapterNum - 10);
-            const end = chapterNum + 10;
+            const start = 1;
+            const end = 1169;
 
             for (let i = start; i <= end; i++) {
                 const btn = document.createElement("button");
@@ -201,6 +201,7 @@
             }
         }
 
+        let tries = 0;
         function loadNext() {
             const img = document.createElement("img");
 
@@ -214,11 +215,14 @@
 
             img.onerror = () => {
                 img.remove();
-
-                // Try the same page again using the same source
-                setTimeout(() => {
-                    loadNext();
-                }, 500);
+                if (tries < 10) {
+                    // Try the same page again using the same source
+                    setTimeout(() => {
+                        loadNext();
+                    }, 1000);
+                    console.log('Retrying...')
+                    tries++;
+                }
             };
 
             img.src = imageUrl(page);
